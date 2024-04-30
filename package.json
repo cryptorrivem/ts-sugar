@@ -1,0 +1,28 @@
+{
+  "name": "ts-sugar",
+  "version": "1.0.0",
+  "description": "",
+  "bin": {
+    "ts-sugar": "dist/ts-sugar.js"
+  },
+  "scripts": {
+    "build": "tsc src/ts-sugar.ts --lib dom,ESNext --outDir dist"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@metaplex-foundation/mpl-core": "^0.4.6",
+    "@metaplex-foundation/mpl-core-candy-machine": "^0.2.0",
+    "@metaplex-foundation/mpl-toolbox": "^0.9.4",
+    "@metaplex-foundation/umi": "^0.9.1",
+    "@metaplex-foundation/umi-bundle-defaults": "^0.9.1",
+    "@supercharge/promise-pool": "^3.2.0",
+    "commander": "^12.0.0",
+    "yaml": "^2.4.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.30",
+    "typescript": "^5.4.3"
+  }
+}
