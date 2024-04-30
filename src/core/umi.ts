@@ -53,7 +53,7 @@ export async function sendTransaction(
   builder: TransactionBuilder
 ) {
   const { blockhash, lastValidBlockHeight } =
-    await context.rpc.getLatestBlockhash();
+    await context.rpc.getLatestBlockhash({ commitment: "finalized" });
   if (context.priorityFees) {
     builder = builder.prepend(
       setComputeUnitPrice(context, { microLamports: context.priorityFees })

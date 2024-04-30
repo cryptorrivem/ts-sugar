@@ -16,6 +16,7 @@ import { Cache, ItemCache } from "../storage/cache";
 import { Config } from "../storage/config";
 import { commonPrefix } from "../utils/prefix";
 import { ContextWithFees, sendTransaction } from "./umi";
+import { setComputeUnitLimit } from "@metaplex-foundation/mpl-toolbox";
 
 export async function createCandyMachine(
   context: ContextWithFees,
@@ -113,7 +114,7 @@ export async function mintFromCandyMachine(
             }),
           ]
         : undefined,
-    })
+    }).prepend(setComputeUnitLimit(context, { units: 75_000 }))
   );
 
   return asset.publicKey;
