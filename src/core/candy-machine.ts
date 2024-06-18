@@ -3,9 +3,11 @@ import {
   CandyMachine,
   addConfigLines,
   createCandyMachine as create,
+  deleteCandyMachine,
   mintAssetFromCandyMachine,
   updateCandyMachine as update,
 } from "@metaplex-foundation/mpl-core-candy-machine";
+import { setComputeUnitLimit } from "@metaplex-foundation/mpl-toolbox";
 import {
   PublicKey,
   generateSigner,
@@ -16,7 +18,6 @@ import { Cache, ItemCache } from "../storage/cache";
 import { Config } from "../storage/config";
 import { commonPrefix } from "../utils/prefix";
 import { ContextWithFees, sendTransaction } from "./umi";
-import { setComputeUnitLimit } from "@metaplex-foundation/mpl-toolbox";
 
 export async function createCandyMachine(
   context: ContextWithFees,
@@ -160,6 +161,18 @@ export async function updateCandyMachine(
           : null,
         maxEditionSupply: 1,
       },
+    })
+  );
+}
+
+export async function withdrawCandyMachine(
+  context: ContextWithFees,
+  candyMachine: PublicKey
+) {
+  await sendTransaction(
+    context,
+    await deleteCandyMachine(context, {
+      candyMachine,
     })
   );
 }

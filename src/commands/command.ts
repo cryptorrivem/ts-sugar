@@ -36,6 +36,8 @@ declare module "commander" {
     withMintOptions: () => Command;
     withCandyMachineOption: () => Command;
     withCandyGuardOption: () => Command;
+    withListOption: () => Command;
+    withAuthorityOption: () => Command;
   }
 }
 
@@ -74,8 +76,20 @@ Command.prototype.withMintOptions = function () {
     );
 };
 Command.prototype.withCandyMachineOption = function () {
-  return this.option("--candy-machine", "Address of candy machine");
+  return this.option("--candy-machine <string>", "Address of candy machine");
 };
 Command.prototype.withCandyGuardOption = function () {
   return this.option("--candy-guard <string>", "Address of the candy guard");
+};
+Command.prototype.withListOption = function () {
+  return this.option(
+    "--list",
+    "List available candy machines, no withdraw performed"
+  );
+};
+Command.prototype.withAuthorityOption = function () {
+  return this.option(
+    "--authority <authority>",
+    "Address of authority to find candy machines for. If authority != keypair.pubkey then force --list. Defaults to keypair.pubkey"
+  );
 };

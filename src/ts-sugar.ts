@@ -9,6 +9,7 @@ import { verify } from "./commands/verify";
 import "./utils";
 import { guardAdd, guardRemove } from "./commands/guard";
 import { configUpdate } from "./commands/config";
+import { withdraw } from "./commands/withdraw";
 
 program
   .baseCommand("deploy")
@@ -44,6 +45,14 @@ program
   .withCacheOption()
   .description("Verify uploaded data")
   .action(verify);
+
+program
+  .baseCommand("withdraw")
+  .withCandyMachineOption()
+  .withListOption()
+  .withAuthorityOption()
+  .description("Withdraw funds a from candy machine account closing it")
+  .action(withdraw);
 
 const guard = program.baseCommand("guard");
 guard
