@@ -36,7 +36,7 @@ export function readCache(cachePath: string): Cache {
 export function saveCache(cachePath: string, cache: Cache) {
   const toSave = JSON.parse(JSON.stringify(cache)) as Cache;
   if (toSave.collection) {
-    toSave.items[COLLECTION_INDEX] = toSave.collection;
+    toSave.items[COLLECTION_INDEX] = { ...toSave.collection };
     delete toSave.collection;
   }
   writeFileSync(cachePath, JSON.stringify(cache, null, 2), "utf-8");

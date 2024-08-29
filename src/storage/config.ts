@@ -3,14 +3,9 @@ import {
   CandyGuardDataArgs,
   DefaultGuardSet,
   DefaultGuardSetArgs,
-  GuardGroupArgs,
-  GuardRepository,
-  GuardSetArgs,
   fetchCandyGuard,
-  getCandyGuardDataSerializer,
 } from "@metaplex-foundation/mpl-core-candy-machine";
 import {
-  Context,
   Option,
   PublicKey,
   none,
@@ -314,7 +309,7 @@ function mapGuards({
   tokenGate,
   tokenPayment,
   edition,
-}: GuardsConfig): DefaultGuardSet {
+}: GuardsConfig): Omit<DefaultGuardSet, ""> {
   fetchCandyGuard;
   return {
     addressGate: withWrap(addressGate, ({ address }) => ({ address })),

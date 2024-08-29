@@ -12,8 +12,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@metaplex-foundation/mpl-core": "^0.4.6",
-    "@metaplex-foundation/mpl-core-candy-machine": "^0.2.0",
+    "@metaplex-foundation/mpl-core": "^1.0.2",
+    "@metaplex-foundation/mpl-core-candy-machine": "^0.2.3",
     "@metaplex-foundation/mpl-toolbox": "^0.9.4",
     "@metaplex-foundation/umi": "^0.9.1",
     "@metaplex-foundation/umi-bundle-defaults": "^0.9.1",

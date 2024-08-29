@@ -82,14 +82,16 @@ export async function sendTransaction(
   builder = builder.setBlockhash({ blockhash, lastValidBlockHeight });
 
   const {
-    value: { unitsConsumed, logs },
+    value: { unitsConsumed, err, logs },
   } = await new Connection(context.rpc.getEndpoint()).simulateTransaction(
     toWeb3JsTransaction(builder.build(context)),
     {
       sigVerify: false,
     }
   );
-  console.info(logs?.join("\n"));
+  if (err) {
+    console.info(logs?.join("\n"));
+  }
 
   const units = (unitsConsumed || 100_000) + 10_000;
   const priorityFees = Math.max(
@@ -106,28 +108,12 @@ export async function sendTransaction(
     skipPreflight: true,
   });
   const [base58Signature] = base58.deserialize(signature);
-  console.info(base58Signature);
+  console.info("sent =>", base58Signature);
 
-  const result = { end: false };
-  try {
-    await Promise.race([
-      context.rpc.confirmTransaction(signature, {
-        strategy: { type: "blockhash", blockhash, lastValidBlockHeight },
-      }),
-      new Promise<void>(async (resolve) => {
-        while (!result.end) {
-          await sleep(10000);
-          await context.rpc.sendTransaction(transaction, {
-            maxRetries: 0,
-            skipPreflight: true,
-          });
-        }
-        resolve();
-      }),
-    ]);
-  } finally {
-    result.end = true;
-  }
+  await context.rpc.confirmTransaction(signature, {
+    strategy: { type: "blockhash", blockhash, lastValidBlockHeight },
+    commitment: "confirmed",
+  });
 
   return base58Signature;
 }

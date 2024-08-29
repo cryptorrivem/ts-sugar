@@ -115,7 +115,7 @@ export async function mintFromCandyMachine(
             }),
           ]
         : undefined,
-    }).prepend(setComputeUnitLimit(context, { units: 75_000 }))
+    })
   );
 
   return asset.publicKey;

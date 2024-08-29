@@ -2,11 +2,11 @@ lockfileVersion: '6.0'
 
 dependencies:
   '@metaplex-foundation/mpl-core':
-    specifier: ^0.4.6
-    version: 0.4.6(@metaplex-foundation/umi@0.9.1)(@noble/hashes@1.4.0)
+    specifier: ^1.0.2
+    version: 1.0.2(@metaplex-foundation/umi@0.9.1)(@noble/hashes@1.4.0)
   '@metaplex-foundation/mpl-core-candy-machine':
-    specifier: ^0.2.0
-    version: 0.2.0(@metaplex-foundation/mpl-core@0.4.6)(@metaplex-foundation/umi@0.9.1)
+    specifier: ^0.2.3
+    version: 0.2.3(@metaplex-foundation/mpl-core@1.0.2)(@metaplex-foundation/umi@0.9.1)
   '@metaplex-foundation/mpl-toolbox':
     specifier: ^0.9.4
     version: 0.9.4(@metaplex-foundation/umi@0.9.1)
@@ -60,17 +60,17 @@ packages:
     engines: {node: '>=14'}
     dependencies:
       '@ethereumjs/rlp': 4.0.1
-      ethereum-cryptography: 2.1.3
+      ethereum-cryptography: 2.2.1
       micro-ftch: 0.3.1
     dev: false
 
-  /@metaplex-foundation/mpl-core-candy-machine@0.2.0(@metaplex-foundation/mpl-core@0.4.6)(@metaplex-foundation/umi@0.9.1):
-    resolution: {integrity: sha512-90AKombU6v3ul5yfexwYskMx9682X4FkgSTui3bqsz0WKlmEt3dxmlrpPGOyi+itEYqp8TjvwxykRXhU6P0uig==}
+  /@metaplex-foundation/mpl-core-candy-machine@0.2.3(@metaplex-foundation/mpl-core@1.0.2)(@metaplex-foundation/umi@0.9.1):
+    resolution: {integrity: sha512-bKktDKPLEZjonauSoPdfmEhz9odWzh07AdwMRnDQNDrjVG7JGvU99xK2h91O7P0YDo+bbX8yLGRhHlPRnGp9zg==}
     peerDependencies:
-      '@metaplex-foundation/mpl-core': '>= 0.4.5 < 1'
+      '@metaplex-foundation/mpl-core': '>= 0.4.7'
       '@metaplex-foundation/umi': '>= 0.8.2 < 1'
     dependencies:
-      '@metaplex-foundation/mpl-core': 0.4.6(@metaplex-foundation/umi@0.9.1)(@noble/hashes@1.4.0)
+      '@metaplex-foundation/mpl-core': 1.0.2(@metaplex-foundation/umi@0.9.1)(@noble/hashes@1.4.0)
       '@metaplex-foundation/mpl-token-metadata': 3.0.0-alpha.27(@metaplex-foundation/umi@0.9.1)
       '@metaplex-foundation/mpl-toolbox': 0.9.4(@metaplex-foundation/umi@0.9.1)
       '@metaplex-foundation/umi': 0.9.1
@@ -78,8 +78,8 @@ packages:
       merkletreejs: 0.3.11
     dev: false
 
-  /@metaplex-foundation/mpl-core@0.4.6(@metaplex-foundation/umi@0.9.1)(@noble/hashes@1.4.0):
-    resolution: {integrity: sha512-k+ArvdurQA0GwM1jQtp3DVqx1xfafwjni8dfryfMllkFI4fjlcUXt3A7dPyuox8ERznYe4ay7YwygVtyqy+sqA==}
+  /@metaplex-foundation/mpl-core@1.0.2(@metaplex-foundation/umi@0.9.1)(@noble/hashes@1.4.0):
+    resolution: {integrity: sha512-pDv0MKBlVuLNmgamAdbPsVfbslsc9Xgn3im11KQcmSAB8kmBQTQAiatDQfLb/f0+H2zl2P6Zvv0cPdvaipdrlg==}
     peerDependencies:
       '@metaplex-foundation/umi': '>=0.8.2 < 1'
       '@noble/hashes': ^1.3.1
@@ -257,21 +257,16 @@ packages:
       '@metaplex-foundation/umi-serializers': 0.9.0
     dev: false
 
-  /@noble/curves@1.3.0:
-    resolution: {integrity: sha512-t01iSXPuN+Eqzb4eBX0S5oubSqXbK/xXa1Ne18Hj8f9pStxztHCE2gfboSp/dZRLSqfuLpRK2nDXDK+W9puocA==}
-    dependencies:
-      '@noble/hashes': 1.3.3
-    dev: false
-
   /@noble/curves@1.4.0:
     resolution: {integrity: sha512-p+4cb332SFCrReJkCYe8Xzm0OWi4Jji5jVdIZRL/PmacmDkFNw6MrrV+gGpiPxLHbV+zKFRywUWbaseT+tZRXg==}
     dependencies:
       '@noble/hashes': 1.4.0
     dev: false
 
-  /@noble/hashes@1.3.3:
-    resolution: {integrity: sha512-V7/fPHgl+jsVPXqqeOzT8egNj2iBIVt+ECeMMG8TdcnTikP3oaBtUVqpT/gYCR68aEBJSF+XbYUxStjbFMqIIA==}
-    engines: {node: '>= 16'}
+  /@noble/curves@1.4.2:
+    resolution: {integrity: sha512-TavHr8qycMChk8UwMld0ZDRvatedkzWfH8IiaeGCfymOP5i0hSCozz9vHOL0nkwk7HRMlFnAiKpS2jrUmSybcw==}
+    dependencies:
+      '@noble/hashes': 1.4.0
     dev: false
 
   /@noble/hashes@1.4.0:
@@ -279,23 +274,23 @@ packages:
     engines: {node: '>= 16'}
     dev: false
 
-  /@scure/base@1.1.6:
-    resolution: {integrity: sha512-ok9AWwhcgYuGG3Zfhyqg+zwl+Wn5uE+dwC0NV/2qQkx4dABbb/bx96vWu8NSj+BNjjSjno+JRYRjle1jV08k3g==}
+  /@scure/base@1.1.7:
+    resolution: {integrity: sha512-PPNYBslrLNNUQ/Yad37MHYsNQtK67EhWb6WtSvNLLPo7SdVZgkUjD6Dg+5On7zNwmskf8OX7I7Nx5oN+MIWE0g==}
     dev: false
 
-  /@scure/bip32@1.3.3:
-    resolution: {integrity: sha512-LJaN3HwRbfQK0X1xFSi0Q9amqOgzQnnDngIt+ZlsBC3Bm7/nE7K0kwshZHyaru79yIVRv/e1mQAjZyuZG6jOFQ==}
+  /@scure/bip32@1.4.0:
+    resolution: {integrity: sha512-sVUpc0Vq3tXCkDGYVWGIZTRfnvu8LoTDaev7vbwh0omSvVORONr960MQWdKqJDCReIEmTj3PAr73O3aoxz7OPg==}
     dependencies:
-      '@noble/curves': 1.3.0
-      '@noble/hashes': 1.3.3
-      '@scure/base': 1.1.6
+      '@noble/curves': 1.4.2
+      '@noble/hashes': 1.4.0
+      '@scure/base': 1.1.7
     dev: false
 
-  /@scure/bip39@1.2.2:
-    resolution: {integrity: sha512-HYf9TUXG80beW+hGAt3TRM8wU6pQoYur9iNypTROm42dorCGmLnFe3eWjz3gOq6G62H2WRh0FCzAR1PI+29zIA==}
+  /@scure/bip39@1.3.0:
+    resolution: {integrity: sha512-disdg7gHuTDZtY+ZdkmLpPCk7fxZSu3gBiEGuoC1XYxv9cGx3Z6cpTggCgW6odSOOIXCiDjuGejW+aJKCY/pIQ==}
     dependencies:
-      '@noble/hashes': 1.3.3
-      '@scure/base': 1.1.6
+      '@noble/hashes': 1.4.0
+      '@scure/base': 1.1.7
     dev: false
 
   /@solana/buffer-layout@4.0.1:
@@ -483,19 +478,19 @@ packages:
       es6-promise: 4.2.8
     dev: false
 
-  /ethereum-bloom-filters@1.1.0:
-    resolution: {integrity: sha512-J1gDRkLpuGNvWYzWslBQR9cDV4nd4kfvVTE/Wy4Kkm4yb3EYRSlyi0eB/inTsSTTVyA0+HyzHgbr95Fn/Z1fSw==}
+  /ethereum-bloom-filters@1.2.0:
+    resolution: {integrity: sha512-28hyiE7HVsWubqhpVLVmZXFd4ITeHi+BUu05o9isf0GUpMtzBUi+8/gFrGaGYzvGAJQmJ3JKj77Mk9G98T84rA==}
     dependencies:
       '@noble/hashes': 1.4.0
     dev: false
 
-  /ethereum-cryptography@2.1.3:
-    resolution: {integrity: sha512-BlwbIL7/P45W8FGW2r7LGuvoEZ+7PWsniMvQ4p5s2xCyw9tmaDlpfsN9HjAucbF+t/qpVHwZUisgfK24TCW8aA==}
+  /ethereum-cryptography@2.2.1:
+    resolution: {integrity: sha512-r/W8lkHSiTLxUxW8Rf3u4HGB0xQweG2RyETjywylKZSzLWoWAijRz8WCuOtJ6wah+avllXBqZuk29HCCvhEIRg==}
     dependencies:
-      '@noble/curves': 1.3.0
-      '@noble/hashes': 1.3.3
-      '@scure/bip32': 1.3.3
-      '@scure/bip39': 1.2.2
+      '@noble/curves': 1.4.2
+      '@noble/hashes': 1.4.0
+      '@scure/bip32': 1.4.0
+      '@scure/bip39': 1.3.0
     dev: false
 
   /ethjs-unit@0.1.6:
@@ -715,8 +710,8 @@ packages:
     dependencies:
       '@ethereumjs/util': 8.1.0
       bn.js: 5.2.1
-      ethereum-bloom-filters: 1.1.0
-      ethereum-cryptography: 2.1.3
+      ethereum-bloom-filters: 1.2.0
+      ethereum-cryptography: 2.2.1
       ethjs-unit: 0.1.6
       number-to-bn: 1.7.0
       randombytes: 2.1.0
