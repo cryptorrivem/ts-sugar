@@ -3,7 +3,6 @@ import {
   CandyGuardDataArgs,
   DefaultGuardSet,
   DefaultGuardSetArgs,
-  fetchCandyGuard,
 } from "@metaplex-foundation/mpl-core-candy-machine";
 import {
   Option,
@@ -410,8 +409,7 @@ function mapGuards({
   assetPaymentMulti,
   assetGate,
   vanityMint,
-}: GuardsConfig): Omit<DefaultGuardSet, ""> {
-  fetchCandyGuard;
+}: GuardsConfig): DefaultGuardSet {
   return {
     botTax: withWrap(botTax, ({ value, lastInstruction }) => ({
       lamports: sol(value),

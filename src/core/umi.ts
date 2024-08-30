@@ -8,7 +8,6 @@ import {
   setComputeUnitLimit,
   setComputeUnitPrice,
 } from "@metaplex-foundation/mpl-toolbox";
-import { toWeb3JsTransaction } from "@metaplex-foundation/umi-web3js-adapters";
 import {
   Context,
   TransactionBuilder,
@@ -16,10 +15,10 @@ import {
   signerIdentity,
 } from "@metaplex-foundation/umi";
 import { createUmi } from "@metaplex-foundation/umi-bundle-defaults";
+import { toWeb3JsTransaction } from "@metaplex-foundation/umi-web3js-adapters";
 import { base58 } from "@metaplex-foundation/umi/serializers";
-import { readFileSync } from "fs";
-import { sleep } from "../utils";
 import { Connection } from "@solana/web3.js";
+import { readFileSync } from "fs";
 
 function readKeypair(umi: Context, keypairPath: string) {
   return umi.eddsa.createKeypairFromSecretKey(
@@ -84,7 +83,11 @@ export async function sendTransaction(
   const {
     value: { unitsConsumed, err, logs },
   } = await new Connection(context.rpc.getEndpoint()).simulateTransaction(
-    toWeb3JsTransaction(builder.build(context)),
+    toWeb3JsTransaction(
+      builder
+        .add(setComputeUnitLimit(context, { units: 1_400_000 }))
+        .build(context)
+    ),
     {
       sigVerify: false,
     }

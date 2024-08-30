@@ -7,7 +7,6 @@ import {
   mintAssetFromCandyMachine,
   updateCandyMachine as update,
 } from "@metaplex-foundation/mpl-core-candy-machine";
-import { setComputeUnitLimit } from "@metaplex-foundation/mpl-toolbox";
 import {
   PublicKey,
   generateSigner,
