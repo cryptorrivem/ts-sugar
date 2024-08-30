@@ -94,6 +94,7 @@ export async function sendTransaction(
   );
   if (err) {
     console.info(logs?.join("\n"));
+    return;
   }
 
   const units = (unitsConsumed || 100_000) + 10_000;

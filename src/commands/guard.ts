@@ -1,12 +1,12 @@
 import {
   deleteCandyGuard,
-  fetchCandyGuard,
   fetchCandyMachine,
   findCandyGuardPda,
   getCandyGuardDataSerializer,
   unwrap,
   updateCandyGuard,
 } from "@metaplex-foundation/mpl-core-candy-machine";
+import { createCandyGuard } from "@metaplex-foundation/mpl-core-candy-machine/dist/src/generated/instructions/createCandyGuard";
 import { generateSigner, publicKey } from "@metaplex-foundation/umi";
 import { createContext, sendTransaction } from "../core/umi";
 import { readCache } from "../storage/cache";
@@ -19,7 +19,6 @@ import {
   CommandArgs,
   ConfigCommandArgs,
 } from "./command";
-import { createCandyGuard } from "@metaplex-foundation/mpl-core-candy-machine/dist/src/generated/instructions/createCandyGuard";
 
 export type GuardArgs = CommandArgs &
   ConfigCommandArgs &
@@ -72,7 +71,7 @@ export async function guardAdd({
         base,
         data: getCandyGuardDataSerializer(
           umi,
-          umi.programs.get("mplCandyMachine")
+          umi.programs.get("mplCoreCandyGuard")
         ).serialize(formatted),
         authority: umi.identity.publicKey,
         candyGuard,
@@ -104,7 +103,6 @@ export async function guardRemove({
 }: GuardArgs) {
   const [sugarRpcUrl, sugarKeypair] = readSolanaConfig(rpcUrl, keypair);
   const umi = createContext(sugarRpcUrl, sugarKeypair, priorityFee);
-  const sugarConfig = readConfig(config);
 
   if (!candyMachineAddress) {
     const sugarCache = readCache(cache);
