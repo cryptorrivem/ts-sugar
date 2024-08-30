@@ -5,11 +5,12 @@ import {
   getCandyGuardDataSerializer,
   unwrap,
   updateCandyGuard,
+  wrap,
 } from "@metaplex-foundation/mpl-core-candy-machine";
 import { createCandyGuard } from "@metaplex-foundation/mpl-core-candy-machine/dist/src/generated/instructions/createCandyGuard";
 import { generateSigner, publicKey } from "@metaplex-foundation/umi";
 import { createContext, sendTransaction } from "../core/umi";
-import { readCache } from "../storage/cache";
+import { readCache, saveCache } from "../storage/cache";
 import { guardsFormat, readConfig } from "../storage/config";
 import { readSolanaConfig } from "../storage/solana";
 import {
@@ -55,8 +56,8 @@ export async function guardAdd({
 
   console.info("Candy Machine ID:", candyMachineAddress);
 
+  const sugarCache = readCache(cache);
   if (!candyGuardAddress) {
-    const sugarCache = readCache(cache);
     candyGuardAddress = sugarCache.program.candyGuard;
   }
 
@@ -75,8 +76,16 @@ export async function guardAdd({
         ).serialize(formatted),
         authority: umi.identity.publicKey,
         candyGuard,
-      })
+      }).add(
+        wrap(umi, {
+          candyGuard,
+          candyMachine: publicKey(candyMachineAddress),
+        })
+      )
     );
+
+    sugarCache.program.candyGuard = candyGuard;
+    saveCache(cache, sugarCache);
   } else {
     console.info("Loading candy guard");
     const candyGuard = publicKey(candyGuardAddress);
