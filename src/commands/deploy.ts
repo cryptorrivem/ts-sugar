@@ -2,11 +2,12 @@ import { publicKey } from "@metaplex-foundation/umi";
 import PromisePool from "@supercharge/promise-pool";
 import {
   createCandyMachine,
+  getMissingLinesInCandyMachine,
   writeLinesToCandyMachine,
 } from "../core/candy-machine";
 import { createCollection } from "../core/collection";
 import { createContext } from "../core/umi";
-import { getMissingLines, readCache, saveCache } from "../storage/cache";
+import { readCache, saveCache } from "../storage/cache";
 import { readConfig } from "../storage/config";
 import { CacheCommandArgs, CommandArgs, ConfigCommandArgs } from "./command";
 import { readSolanaConfig } from "../storage/solana";
@@ -67,13 +68,16 @@ export async function deploy({
 
     console.info("Candy Machine created:", candyMachine);
   }
-  const candyMachine = await fetchCandyMachine(
+  let candyMachine = await fetchCandyMachine(
     umi,
     publicKey(sugarCache.program.candyMachine)
   );
 
   if (!sugarConfig.hiddenSettings) {
-    const missingLines = getMissingLines(sugarCache);
+    const missingLines = getMissingLinesInCandyMachine(
+      candyMachine,
+      sugarCache
+    );
     console.info(missingLines.length, "lines missing on the Candy Machine");
 
     const missingLinesBatches = missingLines.batch(11);
@@ -92,7 +96,14 @@ export async function deploy({
       });
 
     if (errors.length > 0) {
-      const missingLines = getMissingLines(sugarCache);
+      candyMachine = await fetchCandyMachine(
+        umi,
+        publicKey(sugarCache.program.candyMachine)
+      );
+      const missingLines = getMissingLinesInCandyMachine(
+        candyMachine,
+        sugarCache
+      );
       console.info(
         "Failed to write",
         missingLines.length,

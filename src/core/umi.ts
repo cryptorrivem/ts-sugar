@@ -116,7 +116,7 @@ export async function sendTransaction(
 
   await context.rpc.confirmTransaction(signature, {
     strategy: { type: "blockhash", blockhash, lastValidBlockHeight },
-    commitment: "confirmed",
+    commitment: "finalized",
   });
 
   return base58Signature;

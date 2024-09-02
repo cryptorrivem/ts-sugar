@@ -41,7 +41,3 @@ export function saveCache(cachePath: string, cache: Cache) {
   }
   writeFileSync(cachePath, JSON.stringify(cache, null, 2), "utf-8");
 }
-
-export function getMissingLines(cache: Cache) {
-  return Object.entries(cache.items).filter(([_, i]) => !i.onChain);
-}

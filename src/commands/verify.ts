@@ -1,22 +1,14 @@
-import { publicKey, unwrapOption } from "@metaplex-foundation/umi";
-import PromisePool from "@supercharge/promise-pool";
-import {
-  createCandyMachine,
-  writeLinesToCandyMachine,
-} from "../core/candy-machine";
-import { createCollection } from "../core/collection";
-import { createContext } from "../core/umi";
-import { getMissingLines, readCache, saveCache } from "../storage/cache";
-import { readConfig } from "../storage/config";
-import { CacheCommandArgs, CommandArgs, ConfigCommandArgs } from "./command";
-import { readSolanaConfig } from "../storage/solana";
 import {
   CANDY_MACHINE_HIDDEN_SECTION,
   deserializeCandyMachine,
-  fetchCandyMachine,
-  getHiddenSettingsSerializer,
 } from "@metaplex-foundation/mpl-core-candy-machine";
+import { publicKey, unwrapOption } from "@metaplex-foundation/umi";
 import { utf8 } from "@metaplex-foundation/umi/serializers";
+import { createContext } from "../core/umi";
+import { readCache } from "../storage/cache";
+import { readSolanaConfig } from "../storage/solana";
+import { CacheCommandArgs, CommandArgs } from "./command";
+import { getMissingLinesInCandyMachine } from "../core/candy-machine";
 
 export type VerifyArgs = CommandArgs & CacheCommandArgs;
 
@@ -66,7 +58,10 @@ export async function verify({
     });
 
   if (errors.length > 0) {
-    const missingLines = getMissingLines(sugarCache);
+    const missingLines = getMissingLinesInCandyMachine(
+      candyMachine,
+      sugarCache
+    );
     console.info("Invalid lines:");
     console.info(missingLines.join("\n"));
   } else {

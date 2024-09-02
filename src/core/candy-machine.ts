@@ -64,6 +64,22 @@ export async function createCandyMachine(
   return candyMachine.publicKey;
 }
 
+export function getMissingLinesInCandyMachine(
+  candyMachine: CandyMachine,
+  cache: Cache
+) {
+  return Object.entries(cache.items).filter(
+    ([ix, i]) =>
+      parseInt(ix) >= 0 &&
+      !candyMachine.items.some(
+        (c) =>
+          c.index === parseInt(ix) &&
+          c.name === i.name &&
+          c.uri === i.metadata_link
+      )
+  );
+}
+
 export async function writeLinesToCandyMachine(
   context: ContextWithFees,
   candyMachine: CandyMachine,
