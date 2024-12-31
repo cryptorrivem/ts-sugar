@@ -17,10 +17,10 @@ export async function withdraw({
   candyMachine,
   list,
   authority,
-  priorityFee,
+  ...args
 }: WithdrawArgs) {
   const [sugarRpcUrl, sugarKeypair] = readSolanaConfig(rpcUrl, keypair);
-  const umi = createContext(sugarRpcUrl, sugarKeypair, priorityFee);
+  const umi = createContext(sugarRpcUrl, sugarKeypair, args);
 
   if (list || authority) {
     let auth = authority || umi.identity.publicKey;

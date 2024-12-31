@@ -13,10 +13,16 @@ export type ShowArgs = CommandArgs & CacheCommandArgs & CandyMachineCommandArgs;
 
 export async function show(
   _: any,
-  { rpcUrl, keypair, cache, candyMachine: candyMachineAddress }: ShowArgs
+  {
+    rpcUrl,
+    keypair,
+    cache,
+    candyMachine: candyMachineAddress,
+    ...args
+  }: ShowArgs
 ) {
   const [sugarRpcUrl, sugarKeypair] = readSolanaConfig(rpcUrl, keypair);
-  const umi = createContext(sugarRpcUrl, sugarKeypair);
+  const umi = createContext(sugarRpcUrl, sugarKeypair, args);
   const sugarCache = readCache(cache);
 
   const candyMachine = await fetchCandyMachine(

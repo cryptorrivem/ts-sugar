@@ -35,9 +35,10 @@ export async function guardAdd({
   priorityFee,
   candyMachine: candyMachineAddress,
   candyGuard: candyGuardAddress,
+  ...args
 }: GuardArgs) {
   const [sugarRpcUrl, sugarKeypair] = readSolanaConfig(rpcUrl, keypair);
-  const umi = createContext(sugarRpcUrl, sugarKeypair, priorityFee);
+  const umi = createContext(sugarRpcUrl, sugarKeypair, args);
   const sugarConfig = readConfig(config);
 
   if (!candyMachineAddress) {
@@ -106,15 +107,15 @@ export async function guardRemove({
   keypair,
   config,
   cache,
-  priorityFee,
   candyMachine: candyMachineAddress,
   candyGuard: candyGuardAddress,
+  ...args
 }: GuardArgs) {
   const [sugarRpcUrl, sugarKeypair] = readSolanaConfig(rpcUrl, keypair);
-  const umi = createContext(sugarRpcUrl, sugarKeypair, priorityFee);
+  const umi = createContext(sugarRpcUrl, sugarKeypair, args);
 
+  const sugarCache = readCache(cache);
   if (!candyMachineAddress) {
-    const sugarCache = readCache(cache);
     candyMachineAddress = sugarCache.program.candyMachine!;
   }
 
@@ -145,5 +146,10 @@ export async function guardRemove({
         deleteCandyGuard(umi, { candyGuard: publicKey(candyGuardAddress!) })
       )
     );
+
+    sugarCache.program.candyGuard = "";
+    saveCache(cache, sugarCache);
+
+    console.info("Guard removed from candy machine and cache file");
   }
 }

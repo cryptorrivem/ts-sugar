@@ -4,6 +4,7 @@ export type LogLevel = "trace" | "debug" | "info" | "warn" | "error" | "off";
 
 export type CommandArgs = {
   priorityFee?: string;
+  skipPreflight?: boolean;
   logLevel?: LogLevel;
   keypair: string;
   rpcUrl: string;
@@ -29,7 +30,7 @@ export type CandyGuardCommandArgs = {
 
 declare module "commander" {
   interface Command {
-    baseCommand: (name: string) => Command;
+    withDefaultOptions: () => Command;
     withConfigOption: () => Command;
     withCacheOption: () => Command;
     withCandyMachineArg: () => Command;
@@ -41,11 +42,11 @@ declare module "commander" {
   }
 }
 
-Command.prototype.baseCommand = function (name: string) {
-  return this.command(name)
-    .option("-r, --rpc-url <string>", "RPC Url")
+Command.prototype.withDefaultOptions = function () {
+  return this.option("-r, --rpc-url <string>", "RPC Url")
     .option("-k, --keypair", "Path to the keypair file, uses Sol config or")
     .option("-p, --priority-fee <number>", "Priority fee value", "500")
+    .option("--skip-preflight", "Skip preflight check")
     .option("-l, --log-level <string>", "Log level");
 };
 Command.prototype.withConfigOption = function () {

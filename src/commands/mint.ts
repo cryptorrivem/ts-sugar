@@ -26,9 +26,10 @@ export async function mint({
   number = 1,
   receiver,
   attributes,
+  ...args
 }: MintArgs) {
   const [sugarRpcUrl, sugarKeypair] = readSolanaConfig(rpcUrl, keypair);
-  const umi = createContext(sugarRpcUrl, sugarKeypair, priorityFee);
+  const umi = createContext(sugarRpcUrl, sugarKeypair, args);
 
   if (!candyMachineAddress) {
     const sugarCache = readCache(cache);

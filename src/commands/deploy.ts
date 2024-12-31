@@ -25,10 +25,10 @@ export async function deploy({
   config,
   cache,
   collectionMint,
-  priorityFee,
+  ...args
 }: DeployArgs) {
   const [sugarRpcUrl, sugarKeypair] = readSolanaConfig(rpcUrl, keypair);
-  const umi = createContext(sugarRpcUrl, sugarKeypair, priorityFee);
+  const umi = createContext(sugarRpcUrl, sugarKeypair, args);
   const sugarConfig = readConfig(config);
   let sugarCache = readCache(cache);
 

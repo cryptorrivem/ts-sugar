@@ -1,9 +1,12 @@
 import {
   createCollectionV1,
+  plugin,
   pluginAuthorityPair,
   ruleSet,
+  updateCollectionPluginV1,
+  updateCollectionV1,
 } from "@metaplex-foundation/mpl-core";
-import { generateSigner, publicKey } from "@metaplex-foundation/umi";
+import { generateSigner, PublicKey, publicKey } from "@metaplex-foundation/umi";
 import { ItemCache } from "../storage/cache";
 import { Config } from "../storage/config";
 import { ContextWithFees, sendTransaction } from "./umi";
@@ -37,4 +40,34 @@ export async function createCollection(
   );
 
   return collection.publicKey;
+}
+
+export async function updateCollection(
+  context: ContextWithFees,
+  collection: PublicKey,
+  { name, metadata_link }: ItemCache,
+  { sellerFeeBasisPoints, creators }: Config
+) {
+  await sendTransaction(
+    context,
+    updateCollectionV1(context, {
+      collection,
+      newName: name,
+      newUri: metadata_link,
+    }).add(
+      updateCollectionPluginV1(context, {
+        collection,
+        plugin: plugin("Royalties", [
+          {
+            basisPoints: sellerFeeBasisPoints,
+            creators: creators.map(({ address, share }) => ({
+              address: publicKey(address),
+              percentage: share,
+            })),
+            ruleSet: ruleSet("None"),
+          },
+        ]),
+      })
+    )
+  );
 }

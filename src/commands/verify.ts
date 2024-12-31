@@ -12,14 +12,9 @@ import { getMissingLinesInCandyMachine } from "../core/candy-machine";
 
 export type VerifyArgs = CommandArgs & CacheCommandArgs;
 
-export async function verify({
-  rpcUrl,
-  keypair,
-  cache,
-  priorityFee,
-}: VerifyArgs) {
+export async function verify({ rpcUrl, keypair, cache, ...args }: VerifyArgs) {
   const [sugarRpcUrl, sugarKeypair] = readSolanaConfig(rpcUrl, keypair);
-  const umi = createContext(sugarRpcUrl, sugarKeypair, priorityFee);
+  const umi = createContext(sugarRpcUrl, sugarKeypair, args);
   const sugarCache = readCache(cache);
 
   const candyMachineRaw = await umi.rpc.getAccount(

@@ -19,6 +19,7 @@ import { toWeb3JsTransaction } from "@metaplex-foundation/umi-web3js-adapters";
 import { base58 } from "@metaplex-foundation/umi/serializers";
 import { Connection } from "@solana/web3.js";
 import { readFileSync } from "fs";
+import { CommandArgs } from "../commands/command";
 
 function readKeypair(umi: Context, keypairPath: string) {
   return umi.eddsa.createKeypairFromSecretKey(
@@ -28,13 +29,14 @@ function readKeypair(umi: Context, keypairPath: string) {
 
 export type ContextWithFees = Context & {
   priorityFees?: number;
+  skipPreflight?: boolean;
   coreGuards: GuardRepository;
 };
 
 export function createContext(
   rpc: string,
   keypairPath: string,
-  priorityFees?: string
+  args: Pick<CommandArgs, "priorityFee" | "skipPreflight">
 ): ContextWithFees {
   let umi = createUmi(rpc, { commitment: "confirmed" })
     .use(mplToolbox())
@@ -45,7 +47,14 @@ export function createContext(
   );
 
   const result = umi as ContextWithFees;
-  result.priorityFees = priorityFees ? parseInt(priorityFees) : undefined;
+  if (args.priorityFee) {
+    result.priorityFees = args.priorityFee
+      ? parseInt(args.priorityFee)
+      : undefined;
+  }
+  if (args.skipPreflight) {
+    result.skipPreflight = true;
+  }
 
   return result;
 }
@@ -72,6 +81,11 @@ function getTransaction(
   return builder;
 }
 
+const SIMULATION_UNITS = 1_400_000;
+const BUFFER_UNITS = 10_000;
+const DEFAULT_UNITS = 200_000;
+const MIN_PRIORITY_FEES = 500_000;
+
 export async function sendTransaction(
   context: ContextWithFees,
   builder: TransactionBuilder
@@ -80,27 +94,29 @@ export async function sendTransaction(
     await context.rpc.getLatestBlockhash({ commitment: "finalized" });
   builder = builder.setBlockhash({ blockhash, lastValidBlockHeight });
 
-  const {
-    value: { unitsConsumed, err, logs },
-  } = await new Connection(context.rpc.getEndpoint()).simulateTransaction(
+  let unitsConsumed: number | undefined;
+
+  const simulation = await new Connection(
+    context.rpc.getEndpoint()
+  ).simulateTransaction(
     toWeb3JsTransaction(
       builder
-        .add(setComputeUnitLimit(context, { units: 1_400_000 }))
+        .add(setComputeUnitLimit(context, { units: SIMULATION_UNITS }))
         .build(context)
     ),
     {
       sigVerify: false,
     }
   );
-  if (err) {
-    console.info(logs?.join("\n"));
+  if (!context.skipPreflight && simulation.value.err) {
+    console.info(simulation.value.logs?.join("\n"));
     return;
   }
 
-  const units = (unitsConsumed || 100_000) + 10_000;
+  const units = (unitsConsumed || DEFAULT_UNITS) + BUFFER_UNITS;
   const priorityFees = Math.max(
-    context.priorityFees || 25_000,
-    Math.ceil((25_000 * 10 ** 6) / units)
+    context.priorityFees || MIN_PRIORITY_FEES,
+    MIN_PRIORITY_FEES
   );
   const transaction = await getTransaction(
     { ...context, priorityFees },
@@ -109,15 +125,38 @@ export async function sendTransaction(
   ).buildAndSign(context);
 
   const signature = await context.rpc.sendTransaction(transaction, {
-    skipPreflight: true,
+    skipPreflight: context.skipPreflight,
   });
-  const [base58Signature] = base58.deserialize(signature);
-  console.info("sent =>", base58Signature);
+  const base58Signature = logSignature(signature, context.rpc.getEndpoint());
 
-  await context.rpc.confirmTransaction(signature, {
-    strategy: { type: "blockhash", blockhash, lastValidBlockHeight },
-    commitment: "finalized",
-  });
+  try {
+    console.info("Awaiting transaction to finalize...");
+    await context.rpc.confirmTransaction(signature, {
+      strategy: { type: "blockhash", blockhash, lastValidBlockHeight },
+      commitment: "finalized",
+    });
 
+    console.info("Transaction finalized");
+    console.info("");
+  } catch (err: any) {
+    console.error(err);
+  }
+
+  return base58Signature;
+}
+
+function logSignature(signature: string | Uint8Array, rpcUrl: string) {
+  let base58Signature: string;
+  if (typeof signature === "string") {
+    base58Signature = signature;
+  } else {
+    base58Signature = base58.deserialize(signature)[0];
+  }
+  let suffix: string = "";
+  if (rpcUrl.includes("devnet")) {
+    suffix = "?cluster=devnet";
+  }
+
+  console.info("sent =>", `https://solscan.io/tx/${base58Signature}${suffix}`);
   return base58Signature;
 }

@@ -22,10 +22,10 @@ export async function configUpdate({
   config,
   cache,
   candyMachine: candyMachineAddress,
-  priorityFee,
+  ...args
 }: ConfigUpdateArgs) {
   const [sugarRpcUrl, sugarKeypair] = readSolanaConfig(rpcUrl, keypair);
-  const umi = createContext(sugarRpcUrl, sugarKeypair, priorityFee);
+  const umi = createContext(sugarRpcUrl, sugarKeypair, args);
   const sugarConfig = readConfig(config);
   let sugarCache = readCache(cache);
   if (!candyMachineAddress) {
