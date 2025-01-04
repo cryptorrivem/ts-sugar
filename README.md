@@ -50,6 +50,11 @@ ts-sugar deploy
 
 Run `ts-sugar verify` to check that all the lines were written to the Candy Machine. If it gives an error, run the `deploy` command again
 
+# Adding guards
+To allow others to mint from your Candy Machine and, for example, charge a payment for it you should add [guards](https://developers.metaplex.com/core-candy-machine/guards). Make sure the config.json file you created contains them similar as shown as in the [Sugar documentation](https://developers.metaplex.com/candy-machine/sugar/commands/guard) and the [corresponding guard pages](https://developers.metaplex.com/candy-machine/guards).
+
+Run `ts-sugar guard add` to attach those guards to your candy machine.
+
 # Moving forward
 
 Then you may proceed to directly mint assets from the CM or add the guard for making the CM publicly minted using the rules you set for each group.
