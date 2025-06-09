@@ -24,6 +24,9 @@ export type MintCommandArgs = {
   receiver?: string;
   attributes?: string;
 };
+export type AirdropCommandArgs = {
+  file: string;
+};
 export type CandyGuardCommandArgs = {
   candyGuard?: string;
 };
@@ -35,6 +38,7 @@ declare module "commander" {
     withCacheOption: () => Command;
     withCandyMachineArg: () => Command;
     withMintOptions: () => Command;
+    withAirdropOptions: () => Command;
     withCandyMachineOption: () => Command;
     withCandyGuardOption: () => Command;
     withListOption: () => Command;
@@ -75,6 +79,12 @@ Command.prototype.withMintOptions = function () {
       "-a, --attributes <string>",
       "On-chain attributes for the minted NFT, (trait1=value1,trait2=value2)"
     );
+};
+Command.prototype.withAirdropOptions = function () {
+  return this.requiredOption(
+    "-f, --file <path>",
+    "Path to the file containing the NFTs to be airdropped. Must be a JSON/CSV file with the following columns: mint, receiver"
+  );
 };
 Command.prototype.withCandyMachineOption = function () {
   return this.option("--candy-machine <string>", "Address of candy machine");

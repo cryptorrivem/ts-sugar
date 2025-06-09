@@ -36,7 +36,8 @@ export async function createCollection(
           },
         }),
       ],
-    })
+    }),
+    "finalized"
   );
 
   return collection.publicKey;

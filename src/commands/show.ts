@@ -25,7 +25,7 @@ export async function show(
   const umi = createContext(sugarRpcUrl, sugarKeypair, args);
   const sugarCache = readCache(cache);
 
-  const candyMachine = await fetchCandyMachine(
+  const { items, ...candyMachine } = await fetchCandyMachine(
     umi,
     publicKey(candyMachineAddress || sugarCache.program.candyMachine!)
   );

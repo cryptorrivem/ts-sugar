@@ -11,6 +11,7 @@ import { show } from "./commands/show";
 import { verify } from "./commands/verify";
 import { withdraw } from "./commands/withdraw";
 import "./utils";
+import { airdrop } from "./commands/airdrop";
 
 program
   .command("deploy")
@@ -36,6 +37,14 @@ program
   .withMintOptions()
   .description("Deploy cache items into candy machine config on-chain")
   .action(mint);
+
+program
+  .command("airdrop")
+  .withDefaultOptions()
+  .withCacheOption()
+  .withAirdropOptions()
+  .description("Airdrop NFTs already minted")
+  .action(airdrop);
 
 program
   .command("show")

@@ -58,7 +58,8 @@ export async function createCandyMachine(
       hiddenSettings: config.hiddenSettings
         ? some(config.hiddenSettings)
         : undefined,
-    })
+    }),
+    "finalized"
   );
 
   return candyMachine.publicKey;
@@ -98,7 +99,8 @@ export async function writeLinesToCandyMachine(
         name: name.substring(prefixName.length),
         uri: metadata_link!.substring(prefixUri.length),
       })),
-    })
+    }),
+    "processed"
   );
 }
 
@@ -130,7 +132,8 @@ export async function mintFromCandyMachine(
             }),
           ]
         : undefined,
-    })
+    }),
+    "processed"
   );
 
   return asset.publicKey;

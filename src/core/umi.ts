@@ -9,7 +9,9 @@ import {
   setComputeUnitPrice,
 } from "@metaplex-foundation/mpl-toolbox";
 import {
+  Commitment,
   Context,
+  RpcInterface,
   TransactionBuilder,
   createSignerFromKeypair,
   signerIdentity,
@@ -20,6 +22,10 @@ import { base58 } from "@metaplex-foundation/umi/serializers";
 import { Connection } from "@solana/web3.js";
 import { readFileSync } from "fs";
 import { CommandArgs } from "../commands/command";
+import {
+  dasApi,
+  DasApiInterface,
+} from "@metaplex-foundation/digital-asset-standard-api";
 
 function readKeypair(umi: Context, keypairPath: string) {
   return umi.eddsa.createKeypairFromSecretKey(
@@ -27,7 +33,8 @@ function readKeypair(umi: Context, keypairPath: string) {
   );
 }
 
-export type ContextWithFees = Context & {
+export type ContextWithFees = Omit<Context, "rpc"> & {
+  rpc: RpcInterface & DasApiInterface;
   priorityFees?: number;
   skipPreflight?: boolean;
   coreGuards: GuardRepository;
@@ -41,12 +48,13 @@ export function createContext(
   let umi = createUmi(rpc, { commitment: "confirmed" })
     .use(mplToolbox())
     .use(mplCandyMachine())
+    .use(dasApi())
     .use(mplCore());
   umi = umi.use(
     signerIdentity(createSignerFromKeypair(umi, readKeypair(umi, keypairPath)))
   );
 
-  const result = umi as ContextWithFees;
+  const result = umi as unknown as ContextWithFees;
   if (args.priorityFee) {
     result.priorityFees = args.priorityFee
       ? parseInt(args.priorityFee)
@@ -88,7 +96,8 @@ const MIN_PRIORITY_FEES = 500_000;
 
 export async function sendTransaction(
   context: ContextWithFees,
-  builder: TransactionBuilder
+  builder: TransactionBuilder,
+  commitment: Commitment = "confirmed"
 ) {
   const { blockhash, lastValidBlockHeight } =
     await context.rpc.getLatestBlockhash({ commitment: "finalized" });
@@ -112,6 +121,7 @@ export async function sendTransaction(
     console.info(simulation.value.logs?.join("\n"));
     return;
   }
+  unitsConsumed = simulation.value.unitsConsumed;
 
   const units = (unitsConsumed || DEFAULT_UNITS) + BUFFER_UNITS;
   const priorityFees = Math.max(
@@ -130,14 +140,13 @@ export async function sendTransaction(
   const base58Signature = logSignature(signature, context.rpc.getEndpoint());
 
   try {
-    console.info("Awaiting transaction to finalize...");
+    if (commitment === "finalized") {
+      console.info("Awaiting transaction to finalize...");
+    }
     await context.rpc.confirmTransaction(signature, {
       strategy: { type: "blockhash", blockhash, lastValidBlockHeight },
-      commitment: "finalized",
+      commitment,
     });
-
-    console.info("Transaction finalized");
-    console.info("");
   } catch (err: any) {
     console.error(err);
   }
